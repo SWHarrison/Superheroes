@@ -1,0 +1,7 @@
+Aquaman
+1100
+10
+%Water Magic*5*1*1
+%Trident*5*50*80
+%Scale Armor*100
+%

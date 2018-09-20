@@ -1,0 +1,7 @@
+Batman
+800
+10
+%Rich*40*2*50
+%Batarang*10*10*50%Batclaw*40*3*10
+%Batsuit*200
+%Talisman*300

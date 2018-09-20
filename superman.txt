@@ -1,0 +1,7 @@
+Superman
+1600
+80
+%Flight*5*1*0%Heat Vision*5*1*0
+%Fist*40*1*10
+%Ironskin*100
+%Kryptonian Blood*20

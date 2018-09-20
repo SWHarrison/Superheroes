@@ -1,0 +1,7 @@
+Green Arrow
+700
+10
+
+%Bow*100*5*20
+%Handsomeness*50
+%Charisma*100

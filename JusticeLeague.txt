@@ -1,0 +1,1 @@
+batman.txt*WW.txt*flash.txt*notafile.txt

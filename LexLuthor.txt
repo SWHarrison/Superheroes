@@ -1,0 +1,7 @@
+Lex Luthor
+500
+5
+%Intelligence*40*1*0
+%Kryptonite Gun*20*5*40
+%Battlesuit*50
+%Battlesuit Relic*50

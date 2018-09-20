@@ -1,0 +1,7 @@
+Bane
+1500
+10
+%Venom Toxin*50*2*10
+%Fist*50*10*50
+%Bulk*40
+%

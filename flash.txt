@@ -1,0 +1,7 @@
+Flash
+400
+5
+%Speed Force*100*1*50
+%Fist*20*10*75
+%Super Speed*400
+%

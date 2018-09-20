@@ -1,0 +1,7 @@
+Wonder Woman
+1200
+20
+%Divine Speed*30*2*10
+%
+%Divine Armor*600
+%Tiara*100
