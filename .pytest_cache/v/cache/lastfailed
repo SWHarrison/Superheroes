@@ -1,1 +1,4 @@
-{}
+{
+  "battle_test.py": true,
+  "hero_test.py": true
+}

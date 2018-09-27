@@ -139,6 +139,40 @@ class Hero:
         """
         self.kills += num_kills
 
+    def modify_hero(self):
+        want_to_add_more_attributes = True
+        while(want_to_add_more_attributes):
+            choice = get_and_validate_input_string("Would you like to add an ability, weapon, armor or relic? (Enter type to add or something else to skip: ")
+            if(choice.lower() == "ability"):
+                # ability_name = self.get_and_validate_input_string("Please enter ability name: ")
+                # ability_strength = self.get_and_validate_input_int("Please enter abilty strength: ")
+                # ability = Ability(ability_name,ability_strength)
+                ability = create_ability_object(Ability)
+                self.add_ability(ability)
+
+            elif(choice.lower() == "weapon"):
+                #weapon_name = self.get_and_validate_input_string("Please enter weapon name: ")
+                #weapon_strength = self.get_and_validate_input_int("Please enter weapon strength: ")
+                #weapon = Weapon(weapon_name,weapon_strength)
+                weapon = create_ability_object(Weapon)
+                self.add_ability(weapon)
+
+            elif(choice.lower() == "armor"):
+                #armor_name = self.get_and_validate_input_string("Please enter armor name: ")
+                #armor_strength = self.get_and_validate_input_int("Please enter armor strength: ")
+                #armor = Armor(armor_name,armor_strength)
+                armor = create_object(Armor)
+                self.add_armor(armor)
+
+            elif(choice.lower() == "relic"):
+                relic = create_object(Relic)
+                self.add_armor(relic)
+
+            else:
+                choice = get_and_validate_input_string("Stop adding abilities, weapons and armor? (S to stop, anything else to continue): ")
+                if(choice.lower() == "s"):
+                    want_to_add_more_attributes = False
+
 class Team:
     def __init__(self, team_name):
         """Instantiate resources."""
@@ -193,49 +227,15 @@ class Team:
         priority = get_and_validate_input_int("Enter damage priority of hero (standard is 10, higher means they take a greater portion of damage): ")
         hero = Hero(name,health)
         want_to_add_more_attributes = True
-        while(want_to_add_more_attributes):
-            choice = get_and_validate_input_string("Would you like to add an ability, weapon, armor or relic? (Enter type to add or something else to skip: ")
-            if(choice.lower() == "ability"):
-                # ability_name = self.get_and_validate_input_string("Please enter ability name: ")
-                # ability_strength = self.get_and_validate_input_int("Please enter abilty strength: ")
-                # ability = Ability(ability_name,ability_strength)
-                ability = create_ability_object(Ability)
-                hero.add_ability(ability)
-
-            elif(choice.lower() == "weapon"):
-                #weapon_name = self.get_and_validate_input_string("Please enter weapon name: ")
-                #weapon_strength = self.get_and_validate_input_int("Please enter weapon strength: ")
-                #weapon = Weapon(weapon_name,weapon_strength)
-                weapon = create_ability_object(Weapon)
-                hero.add_ability(weapon)
-
-            elif(choice.lower() == "armor"):
-                #armor_name = self.get_and_validate_input_string("Please enter armor name: ")
-                #armor_strength = self.get_and_validate_input_int("Please enter armor strength: ")
-                #armor = Armor(armor_name,armor_strength)
-                armor = create_object(Armor)
-                hero.add_armor(armor)
-
-            elif(choice.lower() == "relic"):
-                relic = create_object(Relic)
-                hero.add_armor(relic)
-
-            else:
-                choice = get_and_validate_input_string("Stop adding abilities, weapons and armor? (S to stop, anything else to continue): ")
-                if(choice.lower() == "s"):
-                    want_to_add_more_attributes = False
-
-        choice = get_and_validate_input_string("Would you like to save this hero for future battles? (Y to save, anything else to skip): ")
-        if(choice.lower() == "y"):
-            save_hero(hero)
+        hero.modify_hero()
         self.add_hero(hero)
 
     def get_hero(self, index):
         #returns hero from index, helper function for find and remove_hero
-        if(index == -999):
+        if(int(index) == -999):
             print("Error, hero not found")
             return "Error"
-        elif(index >= len(self.heroes)):
+        elif(int(index) >= len(self.heroes)):
             print("Error, index out of range")
             return "Error"
         else:
@@ -372,6 +372,9 @@ class Team:
         """
         for hero in self.heroes:
             hero.health = hero.start_health
+            if(not hero.is_alive):
+                hero.is_alive = True
+                self.living_heroes += 1
 
     def stats(self):
         """
@@ -388,6 +391,25 @@ class Team:
             print("Kills: " + str(hero.kills))
             print("Deaths: " + str(hero.deaths))
 
+    def build_or_load_hero_to_team(self):
+        want_to_add_more = True
+        while(want_to_add_more):
+            choice = get_and_validate_input_string("Would you like to build a hero? (B to build one, L to load hero, S to stop): ")
+            if(choice.lower() == "b"):
+                self.build_hero()
+
+            elif(choice.lower() =="l"):
+                file = get_and_validate_input_string("Input file to load hero data from: ")
+                self.load_hero(file)
+            #Checks if user wants to keep adding heroes
+            elif(choice.lower() == "s"):
+                if(self.living_heroes < 1):
+                    print("Error, need at least 1 hero on each team")
+                else:
+                    want_to_add_more = False
+            else:
+                print("Error, invalid input")
+
 
 class Arena:
     def __init__(self):
@@ -401,7 +423,6 @@ class Arena:
         try:
             f = open(team_file, 'r')
         except FileNotFoundError:
-            print("Error, file not found.")
             return 0
 
         data = f.readlines()
@@ -427,23 +448,48 @@ class Arena:
             print("No file found, creating team")
             self.teams[team_number-1] = Team(team_name)
 
+        self.teams[team_number-1].build_or_load_hero_to_team()
+
+    #Allows you to modify a team by adding a hero, removing a hero or adding a power to a hero
+    def modify_team(self, team_number):
+        print("Modifying " + arena.teams[team_number].name)
+        arena.teams[team_number].view_all_heroes()
         want_to_add_more = True
         while(want_to_add_more):
-            choice = get_and_validate_input_string("Would you like to build a hero? (B to build one, L to load hero, S to stop): ")
-            if(choice.lower() == "b"):
-                self.teams[team_number-1].build_hero()
+            choice = get_and_validate_input_string("A to add hero, R to remove hero, P to add power to hero, S to stop: ")
+            if(choice.lower() == "a"):
+                self.teams[team_number].build_or_load_hero_to_team()
 
-            elif(choice.lower() =="l"):
-                file = get_and_validate_input_string("Input file to load hero data from: ")
-                self.teams[team_number-1].load_hero(file)
+            elif(choice.lower() =="r"):
+                choice = get_and_validate_input_string("Input name of hero to remove: ")
+                code = self.teams[team_number].remove_hero(choice)
+                if(code == -999):
+                    print("Error, hero not found")
+
             #Checks if user wants to keep adding heroes
+            elif(choice.lower() == "p"):
+                choice = get_and_validate_input_string("Input name of hero to add powers to: ")
+                code = self.teams[team_number].find_hero(choice)
+                if(code == -999):
+                    print("Error, hero not found")
+                else:
+                    hero = self.teams[team_number].get_hero(code)
+                    want_to_add_more_attributes = True
+                    hero.modify_hero()
+
+                    choice = get_and_validate_input_string("Would you like to save this hero for future battles? (Y to save, anything else to skip): ")
+                    if(choice.lower() == "y"):
+                        save_hero(hero)
+
             elif(choice.lower() == "s"):
-                if(self.teams[team_number-1].living_heroes < 1):
-                    print("Error, need at least 1 hero on each team")
+                if(self.teams[team_number].living_heroes < 1):
+                    print("Error, need at least 1 hero on team")
                 else:
                     want_to_add_more = False
+
             else:
                 print("Error, invalid input")
+
 
     def team_battle(self):
         """
@@ -458,6 +504,8 @@ class Arena:
                 attacking_team = 1
             else:
                 attacking_team = 0
+
+        print(self.teams[attacking_team].name + " has won the battle!")
 
     def show_stats(self):
         """
@@ -603,7 +651,22 @@ def save_hero(hero):
 arena = Arena()
 arena.build_team(1)
 arena.build_team(2)
-arena.teams[0].view_all_heroes()
-arena.teams[1].view_all_heroes()
-arena.team_battle()
-arena.show_stats()
+running = True
+while(running):
+    arena.teams[0].view_all_heroes()
+    arena.teams[1].view_all_heroes()
+    arena.team_battle()
+    arena.show_stats()
+
+    choice = get_and_validate_input_string("Would you like to stage another battle? (S to stop, anything else to continue): ")
+
+    if(choice.lower() == 's'):
+        running = False
+
+    else:
+        arena.teams[0].revive_heroes()
+        arena.teams[1].revive_heroes()
+        choice = get_and_validate_input_string("Would you like to add or remove a hero, or add a power to a hero? (S to skip): ")
+        if(choice.lower() != 's'):
+            arena.modify_team(0)
+            arena.modify_team(1)

@@ -2,6 +2,6 @@ Flash
 400
 5
 %Speed Force*100*1*50
-%Fist*20*10*75
+%Fist*20*10*75%Static Discharge*60*2*15
 %Super Speed*400
-%
+
